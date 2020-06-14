@@ -2,6 +2,9 @@ import React from "react";
 import { gql } from "apollo-boost";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 
+import { MyQuery } from "../apollo-types/MyQuery";
+import { AddPost, AddPostVariables } from "../apollo-types/AddPost";
+import { DeletePost, DeletePostVariables } from "../apollo-types/DeletePost";
 import { Form, Input, Button } from "antd";
 import { keycloak } from "../libs/keycloak";
 
@@ -26,15 +29,17 @@ const ADD_POST = gql`
 `;
 
 const DELETE_POST = gql`
-  mutation DeletePost($id: uuid!) {
+  mutation DeletePost($id: Int!) {
     delete_posts_by_pk(id: $id) {
       id
     }
   }
 `;
 
-const DeletePostBtn: React.FC<{ id: string }> = ({ id }) => {
-  const [deletePost, result] = useMutation(DELETE_POST);
+const DeletePostMut: React.FC<{ id: number }> = ({ id }) => {
+  const [deletePost, result] = useMutation<DeletePost, DeletePostVariables>(
+    DELETE_POST
+  );
   return (
     <Button
       danger
@@ -47,14 +52,14 @@ const DeletePostBtn: React.FC<{ id: string }> = ({ id }) => {
 };
 
 function PostList() {
-  const { loading, error, data } = useQuery(LIST_POSTS);
+  const { loading, error, data } = useQuery<MyQuery>(LIST_POSTS);
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
   if (!data) return <div>No Posts</div>;
-  const posts = data.posts.map((p: any) => (
+  const posts = data.posts.map((p) => (
     <div key={p.id}>
       {p.title} by {p.author}
-      <DeletePostBtn id={p.id} />
+      <DeletePostMut id={p.id} />
     </div>
   ));
   return <div>{posts}</div>;
@@ -62,7 +67,7 @@ function PostList() {
 
 function PostEdit() {
   const user = keycloak.idTokenParsed?.sub || "";
-  const [addPost, result] = useMutation(ADD_POST);
+  const [addPost, result] = useMutation<AddPost, AddPostVariables>(ADD_POST);
   return (
     <Form
       initialValues={{
