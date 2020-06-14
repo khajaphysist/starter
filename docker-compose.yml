@@ -1,0 +1,43 @@
+version: "3.6"
+services:
+  database:
+    image: postgres:12
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+  keycloak:
+    image: jboss/keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: database
+      DB_DATABASE: keycloak
+      DB_SCHEMA: public
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+    ports:
+      - 8081:8080
+    depends_on:
+      - database
+  graphql-engine:
+    image: hasura/graphql-engine:v1.2.2
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+      - keycloak
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:password@database:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      # available from http://locahost:8081/auth/realms/{realm}/.well-known/openid-configuration
+      HASURA_GRAPHQL_JWT_SECRET: '{"jwk_url": "http://keycloak:8080/auth/realms/starter/protocol/openid-connect/certs","claims_namespace_path":"$$","claims_format":"json"}'
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+volumes:
+  db_data:
