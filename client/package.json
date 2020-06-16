@@ -2,8 +2,23 @@
   "name": "starter",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "codegen": "apollo client:codegen --target typescript --outputFlat src/apollo-types"
+  },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
+    "antd": "^4.3.3",
+    "apollo-boost": "^0.4.9",
+    "graphql": "^14.6.0",
+    "keycloak-js": "^10.0.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.3.3",
     "@craco/craco": "^5.6.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -12,21 +27,11 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
-    "antd": "^4.3.3",
-    "apollo-boost": "^0.4.9",
+    "apollo": "^2.28.3",
     "craco-less": "^1.17.0",
-    "graphql": "^14.6.0",
-    "keycloak-js": "^10.0.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react-refresh": "^0.8.3",
     "react-scripts": "3.4.1",
     "typescript": "~3.7.2"
-  },
-  "scripts": {
-    "dev": "FAST_REFRESH=1 craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "codegen": "apollo client:codegen --target typescript --outputFlat src/apollo-types"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -42,10 +47,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.3.3",
-    "apollo": "^2.28.3",
-    "react-refresh": "^0.8.3"
   }
 }
