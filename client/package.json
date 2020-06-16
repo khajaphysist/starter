@@ -23,7 +23,7 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "craco start",
+    "dev": "FAST_REFRESH=1 craco start",
     "build": "craco build",
     "test": "craco test",
     "codegen": "apollo client:codegen --target typescript --outputFlat src/apollo-types"
@@ -44,6 +44,8 @@
     ]
   },
   "devDependencies": {
-    "apollo": "^2.28.3"
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.3.3",
+    "apollo": "^2.28.3",
+    "react-refresh": "^0.8.3"
   }
 }
